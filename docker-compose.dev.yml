@@ -1,0 +1,11 @@
+services:
+  convert-image:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    ports:
+      - "3008:3008"
+    volumes:
+      - .:/app
+      - /app/node_modules
+    command: npm run dev:docker

@@ -1,0 +1,14 @@
+FROM node:20-slim
+
+WORKDIR /app
+
+COPY package.json package-lock.json* ./
+RUN npm ci
+
+COPY server.js ./
+COPY public ./public
+COPY bs-config.docker.js ./
+
+EXPOSE 3008
+
+CMD ["npm", "run", "dev:docker"]
