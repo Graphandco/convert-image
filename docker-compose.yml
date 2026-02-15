@@ -1,9 +1,13 @@
 services:
    convert-image:
       build: .
-      # ports:
-      #   - "3008:3008"
+      container_name: convert-image
       environment:
          - PORT=3008
       restart: unless-stopped
-      container_name: convert-image
+      networks:
+         - web-network
+
+networks:
+   web-network:
+      external: true
