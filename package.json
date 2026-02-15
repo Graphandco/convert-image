@@ -1,22 +1,22 @@
 {
-  "name": "convert-image-web",
-  "version": "1.0.0",
-  "description": "Convertir et redimensionner des images en WebP ou AVIF",
-  "main": "server.js",
-  "scripts": {
-    "start": "node server.js",
-    "dev": "concurrently -k \"PORT=3009 node --watch server.js\" \"npx wait-on -t 10000 http://localhost:3009 && npx browser-sync start -c bs-config.js\"",
-    "dev:docker": "concurrently -k \"PORT=3009 node --watch server.js\" \"npx wait-on -t 10000 http://localhost:3009 && npx browser-sync start -c bs-config.docker.js\""
-  },
-  "dependencies": {
-    "express": "^4.21.0",
-    "multer": "^1.4.5-lts.1",
-    "sharp": "^0.33.5",
-    "sharp-ico": "^0.1.5"
-  },
-  "devDependencies": {
-    "browser-sync": "^3.0.2",
-    "concurrently": "^9.1.0",
-    "wait-on": "^8.0.1"
-  }
+   "name": "convert-image-web",
+   "version": "1.0.0",
+   "description": "Convertir et redimensionner des images en WebP ou AVIF",
+   "main": "server.js",
+   "scripts": {
+      "start": "node server.js",
+      "dev": "concurrently -k \"PORT=3009 node --watch server.js\" \"npx wait-on -t 10000 http://localhost:3009 && npx browser-sync start -c bs-config.js\"",
+      "dev:docker": "concurrently -k \"PORT=3009 node --watch server.js\" \"npx wait-on -t 10000 http://localhost:3009 && npx browser-sync start -c bs-config.docker.js\""
+   },
+   "dependencies": {
+      "express": "^4.21.0",
+      "multer": "^1.4.5-lts.1",
+      "sharp": "^0.33.5",
+      "sharp-ico": "^0.1.5"
+   },
+   "devDependencies": {
+      "browser-sync": "^3.0.2",
+      "concurrently": "^9.1.0",
+      "wait-on": "^8.0.1"
+   }
 }

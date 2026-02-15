@@ -1,8 +1,8 @@
 services:
-  convert-image:
-    build: .
-    ports:
-      - "3008:3008"
-    environment:
-      - PORT=3008
-    restart: unless-stopped
+   convert-image:
+      build: .
+      # ports:
+      #   - "3008:3008"
+      environment:
+         - PORT=3008
+      restart: unless-stopped
