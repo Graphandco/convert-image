@@ -1,12 +1,13 @@
 services:
    convert-image:
-      build: .
+      image: ghcr.io/graphandco/convert-image:latest
       container_name: convert-image
       environment:
          - PORT=3008
       restart: unless-stopped
       networks:
          - web-network
+         
 
       # Sécurité de base (Hardening)
       cpus: 0.5
