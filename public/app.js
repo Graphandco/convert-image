@@ -6,6 +6,10 @@ const format = document.getElementById("format");
 const quality = document.getElementById("quality");
 const qualityVal = document.getElementById("qualityVal");
 const maxWidth = document.getElementById("maxWidth");
+const ratioSelect = document.getElementById("ratio");
+const ratioCustom = document.getElementById("ratioCustom");
+const ratioW = document.getElementById("ratioW");
+const ratioH = document.getElementById("ratioH");
 const convertBtn = document.getElementById("convert");
 const msg = document.getElementById("msg");
 const dropOverlay = document.getElementById("dropOverlay");
@@ -85,6 +89,10 @@ function clearMsg() {
 
 quality.addEventListener("input", () => {
    qualityVal.textContent = quality.value;
+});
+
+ratioSelect.addEventListener("change", () => {
+   ratioCustom.hidden = ratioSelect.value !== "custom";
 });
 
 zone.addEventListener("click", () => fileInput.click());
@@ -200,6 +208,23 @@ convertBtn.addEventListener("click", async () => {
    const outFormat = format.value;
    const q = quality.value;
    const mw = maxWidth.value.trim();
+   let ratioWidth = null;
+   let ratioHeight = null;
+   const ratioVal = ratioSelect.value;
+   if (ratioVal === "custom" && ratioW.value && ratioH.value) {
+      const rw = parseInt(ratioW.value, 10);
+      const rh = parseInt(ratioH.value, 10);
+      if (rw > 0 && rh > 0) {
+         ratioWidth = rw;
+         ratioHeight = rh;
+      }
+   } else if (ratioVal && ratioVal !== "custom") {
+      const [rw, rh] = ratioVal.split(":").map((n) => parseInt(n, 10));
+      if (rw > 0 && rh > 0) {
+         ratioWidth = rw;
+         ratioHeight = rh;
+      }
+   }
    const results = [];
 
    try {
@@ -210,6 +235,10 @@ convertBtn.addEventListener("click", async () => {
             form.append("format", outFormat);
             form.append("quality", q);
             if (mw) form.append("maxWidth", mw);
+            if (ratioWidth != null && ratioHeight != null) {
+               form.append("ratioWidth", ratioWidth);
+               form.append("ratioHeight", ratioHeight);
+            }
             const r = await fetch("/api/convert", {
                method: "POST",
                body: form,

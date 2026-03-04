@@ -90,6 +90,36 @@
          </div>
 
          <div class="row">
+            <label for="ratio">Ratio — facultatif</label>
+            <select id="ratio">
+               <option value="">Aucun</option>
+               <option value="16:9">16:9</option>
+               <option value="4:3">4:3</option>
+               <option value="1:1">1:1</option>
+               <option value="custom">Personnalisé</option>
+            </select>
+            <div class="ratio-custom" id="ratioCustom" hidden>
+               <div class="ratio-custom-inputs">
+                  <input
+                     type="number"
+                     id="ratioW"
+                     min="1"
+                     max="999"
+                     placeholder="16"
+                  />
+                  <span class="ratio-sep">×</span>
+                  <input
+                     type="number"
+                     id="ratioH"
+                     min="1"
+                     max="999"
+                     placeholder="9"
+                  />
+               </div>
+            </div>
+         </div>
+
+         <div class="row">
             <label for="maxWidth">Largeur max (px) — facultatif</label>
             <input
                type="number"

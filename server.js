@@ -47,6 +47,18 @@ app.post("/api/convert", upload.single("image"), async (req, res) => {
       const validMaxWidth =
          Number.isInteger(maxWidth) && maxWidth > 0 && maxWidth <= 8000;
 
+      const ratioWidth = req.body.ratioWidth
+         ? parseInt(req.body.ratioWidth, 10)
+         : null;
+      const ratioHeight = req.body.ratioHeight
+         ? parseInt(req.body.ratioHeight, 10)
+         : null;
+      const validRatio =
+         Number.isInteger(ratioWidth) &&
+         Number.isInteger(ratioHeight) &&
+         ratioWidth > 0 &&
+         ratioHeight > 0;
+
       const base = path.basename(
          req.file.originalname,
          path.extname(req.file.originalname)
@@ -81,9 +93,39 @@ app.post("/api/convert", upload.single("image"), async (req, res) => {
          return res.send(buffer);
       }
 
+      const meta = await sharp(req.file.buffer).metadata();
+      const w = meta.width || 1;
+      const h = meta.height || 1;
+
       let pipeline = sharp(req.file.buffer);
 
-      if (validMaxWidth) {
+      if (validRatio) {
+         const r = ratioWidth / ratioHeight;
+         let cropW, cropH;
+         if (w / h > r) {
+            cropH = h;
+            cropW = Math.round(h * r);
+         } else {
+            cropW = w;
+            cropH = Math.round(w / r);
+         }
+
+         let finalW = cropW;
+         let finalH = cropH;
+         if (validMaxWidth) {
+            const maxDim = Math.max(cropW, cropH);
+            if (maxDim > maxWidth) {
+               const scale = maxWidth / maxDim;
+               finalW = Math.round(cropW * scale);
+               finalH = Math.round(cropH * scale);
+            }
+         }
+
+         pipeline = pipeline.resize(finalW, finalH, {
+            fit: "cover",
+            position: "center",
+         });
+      } else if (validMaxWidth) {
          pipeline = pipeline.resize(maxWidth, maxWidth, {
             fit: "inside",
             withoutEnlargement: true,

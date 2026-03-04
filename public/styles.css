@@ -296,3 +296,20 @@ input[type="range"] {
    color: var(--muted);
    margin-top: 0.25rem;
 }
+
+.ratio-custom {
+   margin-top: 0.5rem;
+}
+.ratio-custom-inputs {
+   display: flex;
+   align-items: center;
+   gap: 0.5rem;
+}
+.ratio-custom-inputs input {
+   flex: 1;
+   min-width: 0;
+}
+.ratio-sep {
+   color: var(--muted);
+   font-size: 0.9em;
+}
