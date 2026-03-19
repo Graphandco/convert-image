@@ -9,6 +9,15 @@ const ico = require("sharp-ico");
 const app = express();
 const PORT = process.env.PORT || 3008;
 
+function sanitizeFilename(name) {
+   return name
+      .replace(/\s+/g, "-")
+      .replace(/["\\/:*?<>|]/g, "")
+      .replace(/-+/g, "-")
+      .replace(/^-|-$/g, "")
+      || "image";
+}
+
 const upload = multer({
    storage: multer.memoryStorage(),
    limits: { fileSize: 50 * 1024 * 1024 },
@@ -59,10 +68,11 @@ app.post("/api/convert", upload.single("image"), async (req, res) => {
          ratioWidth > 0 &&
          ratioHeight > 0;
 
-      const base = path.basename(
+      const rawBase = path.basename(
          req.file.originalname,
          path.extname(req.file.originalname)
       );
+      const base = sanitizeFilename(rawBase);
       const ext = format === "ico" ? "ico" : format;
       const outName = `${base}.${ext}`;
 
