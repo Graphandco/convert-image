@@ -9,13 +9,19 @@ const ico = require("sharp-ico");
 const app = express();
 const PORT = process.env.PORT || 3008;
 
+/**
+ * Nettoie le nom de fichier pour éviter les erreurs (Cloudflare, headers HTTP).
+ * Gère : espaces, accents, apostrophes, caractères spéciaux, unicode.
+ */
 function sanitizeFilename(name) {
-   return name
-      .replace(/\s+/g, "-")
-      .replace(/["\\/:*?<>|]/g, "")
-      .replace(/-+/g, "-")
-      .replace(/^-|-$/g, "")
-      || "image";
+   return (
+      name
+         .normalize("NFD")
+         .replace(/[\u0300-\u036f]/g, "")
+         .replace(/[^a-zA-Z0-9._-]+/g, "-")
+         .replace(/-+/g, "-")
+         .replace(/^-|-$/g, "")
+   ) || "image";
 }
 
 const upload = multer({
