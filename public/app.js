@@ -17,6 +17,9 @@ const metaBlock = document.getElementById("metaBlock");
 const metaBody = document.getElementById("metaBody");
 const metaResultActions = document.getElementById("metaResultActions");
 const downloadAllBtn = document.getElementById("downloadAll");
+const helpBtn = document.getElementById("helpBtn");
+const helpModal = document.getElementById("helpModal");
+const helpModalClose = document.getElementById("helpModalClose");
 
 const IMG_REG = /\.(jpe?g|png|webp|avif)$/i;
 let sourceMeta = [];
@@ -93,6 +96,29 @@ quality.addEventListener("input", () => {
 
 ratioSelect.addEventListener("change", () => {
    ratioCustom.hidden = ratioSelect.value !== "custom";
+});
+
+function openHelpModal() {
+   helpModal.classList.add("is-open");
+   helpModal.setAttribute("aria-hidden", "false");
+   helpModalClose.focus();
+}
+
+function closeHelpModal() {
+   helpModal.classList.remove("is-open");
+   helpModal.setAttribute("aria-hidden", "true");
+   helpBtn.focus();
+}
+
+helpBtn.addEventListener("click", openHelpModal);
+helpModalClose.addEventListener("click", closeHelpModal);
+helpModal.addEventListener("click", (e) => {
+   if (e.target === helpModal) closeHelpModal();
+});
+document.addEventListener("keydown", (e) => {
+   if (e.key === "Escape" && helpModal.classList.contains("is-open")) {
+      closeHelpModal();
+   }
 });
 
 zone.addEventListener("click", () => fileInput.click());

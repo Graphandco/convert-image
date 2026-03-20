@@ -21,6 +21,28 @@
          <header class="page-header">
             <img src="/logo.svg" alt="" class="logo" width="32" height="32" />
             <h1>Convert Image</h1>
+            <button
+               type="button"
+               class="help-btn"
+               id="helpBtn"
+               title="Comment utiliser l'application"
+               aria-label="Ouvrir le tutoriel"
+            >
+               <svg
+                  class="help-icon"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+               >
+                  <path
+                     d="M12 2a7 7 0 0 1 7 7c0 2.38-1.19 4.47-3 5.74V17H8v-2.26C6.19 13.47 5 11.38 5 9a7 7 0 0 1 7-7z"
+                  />
+                  <line x1="9" y1="21" x2="15" y2="21" />
+               </svg>
+            </button>
          </header>
 
          <div class="zone" id="zone" role="button" tabindex="0">
@@ -137,6 +159,77 @@
 
          <div class="msg" id="msg"></div>
       </main>
+
+      <div
+         class="modal-overlay"
+         id="helpModal"
+         aria-hidden="true"
+         aria-modal="true"
+         role="dialog"
+         aria-labelledby="helpModalTitle"
+      >
+         <div class="modal">
+            <div class="modal-header">
+               <h2 id="helpModalTitle">Comment utiliser Convert Image</h2>
+               <button
+                  type="button"
+                  class="modal-close"
+                  id="helpModalClose"
+                  aria-label="Fermer"
+               >
+                  <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                     <path d="M18 6L6 18M6 6l12 12" />
+                  </svg>
+               </button>
+            </div>
+            <div class="modal-body">
+               <ol class="tutorial-list">
+                  <li>
+                     <strong>Déposez ou sélectionnez vos images</strong><br />
+                     Cliquez sur la zone ou glissez-déposez vos fichiers (JPG,
+                     PNG, WebP ou AVIF). Vous pouvez traiter plusieurs images en
+                     même temps.
+                  </li>
+                  <li>
+                     <strong>Choisissez le format de sortie</strong><br />
+                     WebP et AVIF offrent un meilleur rapport qualité/taille pour
+                     le web. JPG et PNG restent compatibles avec tous les
+                     logiciels. ICO est utile pour les favicons.
+                  </li>
+                  <li>
+                     <strong>Réglez la qualité</strong><br />
+                     Un réglage entre 75 et 85 % est souvent optimal pour le web.
+                     Réduisez pour des fichiers plus légers, augmentez pour une
+                     qualité maximale.
+                  </li>
+                  <li>
+                     <strong>Ratio (facultatif)</strong><br />
+                     Pour recadrer vos images à un format précis : 16:9
+                     (paysage), 4:3, 1:1 (carré) ou un ratio personnalisé. La
+                     zone la plus intéressante est conservée au centre.
+                  </li>
+                  <li>
+                     <strong>Largeur max (facultatif)</strong><br />
+                     Limitez la dimension la plus grande en pixels (ex. 1920 pour
+                     du Full HD). L’image est redimensionnée en conservant le
+                     ratio.
+                  </li>
+                  <li>
+                     <strong>Convertissez</strong><br />
+                     Cliquez sur « Convertir » puis récupérez vos fichiers
+                     convertis. Avec plusieurs images, utilisez « Tout
+                     télécharger » ou le bouton de téléchargement sur chaque
+                     ligne.
+                  </li>
+               </ol>
+               <p class="tutorial-tip">
+                  <strong>Astuce :</strong> Vous pouvez combiner ratio et
+                  largeur max (ex. 16:9 + 1920 px) pour obtenir des images
+                  optimisées et harmonisées.
+               </p>
+            </div>
+         </div>
+      </div>
 
       <script src="/app.js"></script>
    </body>

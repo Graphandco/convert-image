@@ -42,6 +42,7 @@ main {
    align-items: center;
    gap: 0.75rem;
    margin-bottom: 1.5rem;
+   position: relative;
 }
 .page-header .logo {
    flex-shrink: 0;
@@ -49,10 +50,36 @@ main {
    height: 32px;
    object-fit: contain;
 }
-h1 {
+.page-header h1 {
+   flex: 1;
    margin: 0;
    font-size: 1.25rem;
    font-weight: 600;
+}
+.help-btn {
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   width: 36px;
+   height: 36px;
+   padding: 0;
+   margin: 0;
+   border: 1px solid var(--accent);
+   border-radius: 8px;
+   background: var(--bg);
+   color: var(--accent);
+   cursor: pointer;
+   transition:
+      background 0.2s,
+      border-color 0.2s;
+}
+.help-btn:hover {
+   background: rgba(241, 172, 24, 0.15);
+   border-color: var(--accent);
+}
+.help-icon {
+   width: 20px;
+   height: 20px;
 }
 
 .zone {
@@ -61,7 +88,9 @@ h1 {
    padding: 1.5rem;
    text-align: center;
    margin-bottom: 1.5rem;
-   transition: border-color 0.2s, background 0.2s;
+   transition:
+      border-color 0.2s,
+      background 0.2s;
    cursor: pointer;
 }
 .zone:hover,
@@ -199,7 +228,9 @@ h1 {
    justify-content: center;
    opacity: 0;
    visibility: hidden;
-   transition: opacity 0.15s, visibility 0.15s;
+   transition:
+      opacity 0.15s,
+      visibility 0.15s;
    pointer-events: none;
 }
 .drop-overlay.active {
@@ -311,5 +342,104 @@ input[type="range"] {
 }
 .ratio-sep {
    color: var(--muted);
+   font-size: 0.9em;
+}
+
+/* Modal */
+.modal-overlay {
+   position: fixed;
+   inset: 0;
+   z-index: 10000;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   padding: 1.5rem;
+   background: rgba(13, 15, 18, 0.85);
+   opacity: 0;
+   visibility: hidden;
+   transition:
+      opacity 0.2s,
+      visibility 0.2s;
+}
+.modal-overlay.is-open {
+   opacity: 1;
+   visibility: visible;
+}
+.modal {
+   width: 100%;
+   max-width: 700px;
+   max-height: 90vh;
+   overflow: hidden;
+   display: flex;
+   flex-direction: column;
+   background: var(--surface);
+   border: 1px solid var(--border);
+   border-radius: var(--radius);
+   box-shadow: 0 24px 48px rgba(0, 0, 0, 0.4);
+}
+.modal-header {
+   display: flex;
+   align-items: center;
+   justify-content: space-between;
+   gap: 1rem;
+   padding: 1.25rem 1.5rem;
+   border-bottom: 1px solid var(--border);
+}
+.modal-header h2 {
+   margin: 0;
+   font-size: 1.1rem;
+   font-weight: 600;
+   color: var(--text);
+}
+.modal-close {
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   width: 36px;
+   height: 36px;
+   padding: 0;
+   margin: 0;
+   border: 1px solid var(--border);
+   border-radius: 8px;
+   background: var(--bg);
+   color: var(--muted);
+   cursor: pointer;
+   transition:
+      background 0.2s,
+      color 0.2s;
+}
+.modal-close:hover {
+   background: var(--border);
+   color: var(--text);
+}
+.modal-close svg {
+   width: 18px;
+   height: 18px;
+}
+.modal-body {
+   padding: 1.5rem;
+   overflow-y: auto;
+   font-size: 0.95em;
+   line-height: 1.6;
+}
+.tutorial-list {
+   margin: 0 0 1rem 0;
+   padding-left: 1.5rem;
+}
+.tutorial-list li {
+   margin-bottom: 1rem;
+}
+.tutorial-list li:last-child {
+   margin-bottom: 0;
+}
+.tutorial-list strong {
+   color: var(--accent);
+}
+.tutorial-tip {
+   margin: 0;
+   padding: 0.85rem 1rem;
+   background: rgba(241, 172, 24, 0.12);
+   border-left: 3px solid var(--accent);
+   border-radius: 0 6px 6px 0;
    font-size: 0.9em;
 }
