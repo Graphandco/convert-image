@@ -20,6 +20,52 @@ const downloadAllBtn = document.getElementById("downloadAll");
 const helpBtn = document.getElementById("helpBtn");
 const helpModal = document.getElementById("helpModal");
 const helpModalClose = document.getElementById("helpModalClose");
+const limitModal = document.getElementById("limitModal");
+const limitModalClose = document.getElementById("limitModalClose");
+const convertLoader = document.getElementById("convertLoader");
+
+/** Limite cumulée des fichiers sources avant conversion (octets) */
+const MAX_TOTAL_BYTES = 100 * 1024 * 1024;
+
+function getTotalFileSize(files) {
+   return Array.from(files).reduce((sum, f) => sum + f.size, 0);
+}
+
+/**
+ * @param {HTMLElement} overlay - .modal-overlay
+ * @param {{ focusSelector?: string }} [options]
+ */
+function openModal(overlay, options = {}) {
+   const { focusSelector = ".modal-close" } = options;
+   overlay.classList.add("is-open");
+   overlay.setAttribute("aria-hidden", "false");
+   const focusEl = overlay.querySelector(focusSelector);
+   if (focusEl) focusEl.focus();
+}
+
+/**
+ * @param {HTMLElement} overlay
+ * @param {HTMLElement | null} [focusReturn]
+ */
+function closeModal(overlay, focusReturn = null) {
+   overlay.classList.remove("is-open");
+   overlay.setAttribute("aria-hidden", "true");
+   if (focusReturn && typeof focusReturn.focus === "function") {
+      focusReturn.focus();
+   }
+}
+
+function bindModalBackdropClose(overlay, onClose) {
+   overlay.addEventListener("click", (e) => {
+      if (e.target === overlay) onClose();
+   });
+}
+
+function setConvertLoading(on) {
+   if (!convertLoader) return;
+   convertLoader.hidden = !on;
+   convertLoader.setAttribute("aria-hidden", on ? "false" : "true");
+}
 
 const IMG_REG = /\.(jpe?g|png|webp|avif)$/i;
 let sourceMeta = [];
@@ -31,6 +77,17 @@ function handleDropFiles(fileList) {
    if (!valid.length) return;
    const dt = new DataTransfer();
    valid.forEach((f) => dt.items.add(f));
+   fileInput.files = dt.files;
+   updateZone();
+}
+
+function removeFileAtIndex(index) {
+   const files = Array.from(fileInput.files || []);
+   if (index < 0 || index >= files.length) return;
+   const dt = new DataTransfer();
+   files.forEach((f, j) => {
+      if (j !== index) dt.items.add(f);
+   });
    fileInput.files = dt.files;
    updateZone();
 }
@@ -99,24 +156,35 @@ ratioSelect.addEventListener("change", () => {
 });
 
 function openHelpModal() {
-   helpModal.classList.add("is-open");
-   helpModal.setAttribute("aria-hidden", "false");
-   helpModalClose.focus();
+   openModal(helpModal);
 }
 
 function closeHelpModal() {
-   helpModal.classList.remove("is-open");
-   helpModal.setAttribute("aria-hidden", "true");
-   helpBtn.focus();
+   closeModal(helpModal, helpBtn);
+}
+
+function openLimitModal() {
+   openModal(limitModal);
+}
+
+function closeLimitModal() {
+   closeModal(limitModal, convertBtn);
 }
 
 helpBtn.addEventListener("click", openHelpModal);
 helpModalClose.addEventListener("click", closeHelpModal);
-helpModal.addEventListener("click", (e) => {
-   if (e.target === helpModal) closeHelpModal();
-});
+bindModalBackdropClose(helpModal, closeHelpModal);
+
+limitModalClose.addEventListener("click", closeLimitModal);
+bindModalBackdropClose(limitModal, closeLimitModal);
+
 document.addEventListener("keydown", (e) => {
-   if (e.key === "Escape" && helpModal.classList.contains("is-open")) {
+   if (e.key !== "Escape") return;
+   if (limitModal.classList.contains("is-open")) {
+      closeLimitModal();
+      return;
+   }
+   if (helpModal.classList.contains("is-open")) {
       closeHelpModal();
    }
 });
@@ -203,9 +271,23 @@ async function updateZone() {
       const poidsTd = document.createElement("td");
       poidsTd.textContent = sourceMeta[i].poids;
       const formatTd = document.createElement("td");
-      formatTd.className = "meta-format-cell";
-      formatTd.textContent = sourceMeta[i].format;
-      tr.append(dimsTd, poidsTd, formatTd);
+      const formatInner = document.createElement("div");
+      formatInner.className = "meta-format-inner";
+      formatInner.textContent = sourceMeta[i].format;
+      formatTd.appendChild(formatInner);
+
+      const removeTd = document.createElement("td");
+      removeTd.className = "meta-actions-cell";
+      const removeBtn = document.createElement("button");
+      removeBtn.type = "button";
+      removeBtn.className = "meta-remove";
+      removeBtn.title = "Retirer ce fichier";
+      removeBtn.setAttribute("aria-label", `Retirer ${f.name}`);
+      removeBtn.innerHTML = `<svg class="meta-remove-icon" viewBox="0 0 24 24" aria-hidden="true" fill="none"><path stroke="currentColor" stroke-width="2.25" stroke-linecap="round" d="M18 6L6 18M6 6l12 12"/></svg>`;
+      removeBtn.addEventListener("click", () => removeFileAtIndex(i));
+      removeTd.appendChild(removeBtn);
+
+      tr.append(dimsTd, poidsTd, formatTd, removeTd);
       metaBody.appendChild(tr);
 
       getImageDimensions(f).then((dims) => {
@@ -224,12 +306,17 @@ downloadAllBtn.addEventListener("click", () => {
 convertBtn.addEventListener("click", async () => {
    const files = Array.from(fileInput.files || []);
    if (!files.length) return;
+   if (getTotalFileSize(files) > MAX_TOTAL_BYTES) {
+      openLimitModal();
+      return;
+   }
    clearMsg();
    metaBlock.classList.remove("has-converted");
    metaResultActions.hidden = true;
    lastConvertedResults = [];
    convertBtn.disabled = true;
    convertBtn.textContent = "Conversion…";
+   setConvertLoading(true);
 
    const outFormat = format.value;
    const q = quality.value;
@@ -302,6 +389,7 @@ convertBtn.addEventListener("click", async () => {
          const dimsTd = tr.cells[0];
          const poidsTd = tr.cells[1];
          const formatTd = tr.cells[2];
+         const removeTd = tr.cells[3];
          const src = sourceMeta[i] || {};
          const convDims = r.dims ? `${r.dims.width} × ${r.dims.height}` : "—";
          const convPoids = formatBytes(r.size);
@@ -322,9 +410,15 @@ convertBtn.addEventListener("click", async () => {
             triggerDownload(r.blob, r.name)
          );
 
+         const formatInner = document.createElement("div");
+         formatInner.className = "meta-format-inner";
+         formatInner.appendChild(formatText);
+         formatInner.appendChild(downloadBtn);
          formatTd.innerHTML = "";
-         formatTd.appendChild(formatText);
-         formatTd.appendChild(downloadBtn);
+         formatTd.appendChild(formatInner);
+
+         if (removeTd) removeTd.innerHTML = "";
+
          lastConvertedResults.push({ blob: r.blob, name: r.name });
       });
 
@@ -340,6 +434,7 @@ convertBtn.addEventListener("click", async () => {
    } catch (e) {
       showMsg(e.message || "Erreur lors de la conversion.", "error");
    } finally {
+      setConvertLoading(false);
       convertBtn.disabled = false;
       convertBtn.textContent = "Convertir";
    }

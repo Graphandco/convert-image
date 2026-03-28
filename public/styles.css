@@ -155,25 +155,68 @@ main {
 }
 .meta-table {
    width: 100%;
+   table-layout: fixed;
    border-collapse: collapse;
 }
 .meta-table th,
 .meta-table td {
    padding: 0.5rem 0.75rem;
    text-align: left;
-   border-bottom: 1px solid var(--border);
+   vertical-align: middle;
 }
-.meta-table th {
+.meta-table thead th {
    color: var(--muted);
    font-weight: 400;
+   border-bottom: 1px solid var(--border);
+}
+.meta-table tbody td {
+   border-bottom: 1px solid var(--border);
 }
 .meta-table tbody tr:last-child td {
    border-bottom: none;
 }
-.meta-format-cell {
+.meta-th-empty {
+   width: 2.25rem;
+   padding: 0.5rem 0.5rem;
+}
+.meta-actions-cell {
+   width: 2.25rem;
+   padding: 0.5rem 0.5rem;
+   text-align: center;
+}
+.meta-remove {
+   display: inline-flex;
+   align-items: center;
+   justify-content: center;
+   padding: 0;
+   margin: 0;
+   border: none;
+   background: none;
+   color: var(--error);
+   cursor: pointer;
+   line-height: 0;
+}
+.meta-remove:hover {
+   color: #f87171;
+}
+.meta-remove:focus-visible {
+   outline: 2px solid var(--error);
+   outline-offset: 2px;
+}
+.meta-remove-icon {
+   width: 1rem;
+   height: 1rem;
+   flex-shrink: 0;
+   display: block;
+}
+.meta-remove-icon path {
+   stroke: currentColor;
+}
+.meta-format-inner {
    display: flex;
    align-items: center;
    gap: 0.5rem;
+   min-width: 0;
 }
 .meta-format-text {
    flex: 1;
@@ -345,7 +388,7 @@ input[type="range"] {
    font-size: 0.9em;
 }
 
-/* Modal */
+/* Modales (tutoriel, limite de poids, etc.) */
 .modal-overlay {
    position: fixed;
    inset: 0;
@@ -422,6 +465,12 @@ input[type="range"] {
    font-size: 0.95em;
    line-height: 1.6;
 }
+.modal-text {
+   margin: 0;
+}
+.modal-text strong {
+   color: var(--accent);
+}
 .tutorial-list {
    margin: 0 0 1rem 0;
    padding-left: 1.5rem;
@@ -442,4 +491,64 @@ input[type="range"] {
    border-left: 3px solid var(--accent);
    border-radius: 0 6px 6px 0;
    font-size: 0.9em;
+}
+
+.visually-hidden {
+   position: absolute;
+   width: 1px;
+   height: 1px;
+   padding: 0;
+   margin: -1px;
+   overflow: hidden;
+   clip: rect(0, 0, 0, 0);
+   white-space: nowrap;
+   border: 0;
+}
+
+.convert-loader-overlay {
+   position: fixed;
+   inset: 0;
+   z-index: 10001;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   background: rgba(0, 0, 0, 0.65);
+   backdrop-filter: blur(3px);
+}
+.convert-loader-overlay[hidden] {
+   display: none !important;
+}
+
+.loader {
+   position: relative;
+   width: 48px;
+   height: 48px;
+}
+.loader:before,
+.loader:after {
+   content: "";
+   display: block;
+   border: 32px solid transparent;
+   border-top-color: #fff;
+   position: absolute;
+   left: 0;
+   top: 0;
+   animation: weld-rotate 2s infinite ease-in;
+}
+.loader:before {
+   border-color: transparent transparent transparent var(--accent);
+   animation-delay: 0.5s;
+}
+@keyframes weld-rotate {
+   0%,
+   25% {
+      transform: rotate(0deg);
+   }
+   50%,
+   75% {
+      transform: rotate(180deg);
+   }
+   100% {
+      transform: rotate(360deg);
+   }
 }

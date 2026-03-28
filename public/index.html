@@ -17,6 +17,18 @@
       <div class="drop-overlay" id="dropOverlay" aria-hidden="true">
          <span>Déposez les images ici</span>
       </div>
+
+      <div
+         class="convert-loader-overlay"
+         id="convertLoader"
+         hidden
+         aria-hidden="true"
+         role="status"
+         aria-live="polite"
+      >
+         <span class="loader" aria-hidden="true"></span>
+         <span class="visually-hidden">Conversion en cours…</span>
+      </div>
       <main>
          <header class="page-header">
             <img src="/logo.svg" alt="" class="logo" width="32" height="32" />
@@ -79,6 +91,7 @@
                      <th>Dimensions</th>
                      <th>Poids</th>
                      <th>Format</th>
+                     <th class="meta-th-empty" aria-hidden="true"></th>
                   </tr>
                </thead>
                <tbody id="metaBody"></tbody>
@@ -159,6 +172,38 @@
 
          <div class="msg" id="msg"></div>
       </main>
+
+      <div
+         class="modal-overlay"
+         id="limitModal"
+         aria-hidden="true"
+         aria-modal="true"
+         role="dialog"
+         aria-labelledby="limitModalTitle"
+      >
+         <div class="modal">
+            <div class="modal-header">
+               <h2 id="limitModalTitle">Poids total trop élevé</h2>
+               <button
+                  type="button"
+                  class="modal-close"
+                  id="limitModalClose"
+                  aria-label="Fermer"
+               >
+                  <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                     <path d="M18 6L6 18M6 6l12 12" />
+                  </svg>
+               </button>
+            </div>
+            <div class="modal-body">
+               <p class="modal-text">
+                  La somme des tailles de vos fichiers dépasse la limite de
+                  <strong>100&nbsp;Mo</strong>. Retirez des fichiers ou réduisez
+                  leur taille avant de lancer la conversion.
+               </p>
+            </div>
+         </div>
+      </div>
 
       <div
          class="modal-overlay"
