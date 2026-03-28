@@ -11,7 +11,7 @@ Interface web légère pour convertir et redimensionner des images en **WebP** o
 -  **Téléchargement** : fichier converti en pièce jointe
 
 Les conversions sont faites en mémoire (pas de stockage persistant).  
-Limite : **50 Mo** par fichier.
+Limite côté interface : **50 Mo** au total pour la somme des fichiers sélectionnés avant conversion. Chaque requête au serveur accepte au plus **50 Mo** par fichier (multer), en cohérence avec Caddy.
 
 ---
 

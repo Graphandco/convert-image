@@ -24,8 +24,8 @@ const limitModal = document.getElementById("limitModal");
 const limitModalClose = document.getElementById("limitModalClose");
 const convertLoader = document.getElementById("convertLoader");
 
-/** Limite cumulée des fichiers sources avant conversion (octets) */
-const MAX_TOTAL_BYTES = 100 * 1024 * 1024;
+/** Limite cumulée des fichiers sources avant conversion (50 Mo) */
+const MAX_TOTAL_BYTES = 50 * 1024 * 1024;
 
 function getTotalFileSize(files) {
    return Array.from(files).reduce((sum, f) => sum + f.size, 0);
